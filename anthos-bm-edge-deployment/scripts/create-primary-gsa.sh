@@ -119,16 +119,13 @@ done
 
 echo -e "\n====================\n"
 
-read -r -p "Create a new key for GSA? [y/N] " response
-if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+
   gcloud iam service-accounts keys create ${KEY_LOCATION} \
     --iam-account="${GSA_EMAIL}" \
     --project "${PROJECT_ID}"
 
   # reducing OS visibility to read-only for current user
   chmod 400 ${KEY_LOCATION}
-else
-  echo "Skipping making new keys"
-fi
+
 # [END_EXCLUDE]
 # [END anthosbaremetal_scripts_create_gsa]

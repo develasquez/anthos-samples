@@ -207,43 +207,36 @@ if [[ "${ERROR}" -eq 1 ]]; then
     exit 1
 fi
 
-echo ""
-read -rp "Check the values above and if correct, do you want to proceed? (y/N): " proceed
 
-if [[ "${proceed}" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+pretty_print "Starting the installation"
+pretty_print "Pulling docker install image..."
+docker pull "gcr.io/${PROJECT_ID}/consumer-edge-install:latest"
+RETURN=$?
 
-    pretty_print "Starting the installation"
-    pretty_print "Pulling docker install image..."
-    docker pull "gcr.io/${PROJECT_ID}/consumer-edge-install:latest"
-    RETURN=$?
-
-    if [[ $RETURN -gt 0 ]]; then
-        pretty_print "ERROR: Cannot pull Consumer Edge Install image"
-        exit 1
-    fi
-
-    pretty_print " "
-    pretty_print "=============================="
-    pretty_print "Starting the docker container. You will need to run the following 2 commands (cut-copy-paste)"
-    pretty_print "=============================="
-    pretty_print "1: ./scripts/health-check.sh"
-    pretty_print "2: ansible-playbook all-full-install.yaml -i inventory"
-    pretty_print "3: Type 'exit' to exit the Docker shell after installation"
-    pretty_print "=============================="
-    pretty_print "Thank you for using the quick helper script!"
-    pretty_print "(you are now inside the Docker shell)"
-    pretty_print " "
-
-    # Running docker image
-    docker run -e PROJECT_ID="${PROJECT_ID}" -v "$(pwd):/var/consumer-edge-install:ro" -it "gcr.io/${PROJECT_ID}/consumer-edge-install:latest"
-    RETURN=$?
-
-    if [[ $RETURN -gt 0 ]]; then
-        pretty_print "ERROR: Docker container cannot open."
-        exit 1
-    fi
-
-else
-    echo "Canceling"
-    exit 0
+if [[ $RETURN -gt 0 ]]; then
+    pretty_print "ERROR: Cannot pull Consumer Edge Install image"
+    exit 1
 fi
+
+pretty_print " "
+pretty_print "=============================="
+pretty_print "Starting the docker container. You will need to run the following 2 commands (cut-copy-paste)"
+pretty_print "=============================="
+pretty_print "1: ./scripts/health-check.sh"
+pretty_print "2: ansible-playbook all-full-install.yaml -i inventory"
+pretty_print "3: Type 'exit' to exit the Docker shell after installation"
+pretty_print "=============================="
+pretty_print "Thank you for using the quick helper script!"
+pretty_print "(you are now inside the Docker shell)"
+pretty_print " "
+
+# Running docker image
+docker run -e PROJECT_ID="${PROJECT_ID}" -v "$(pwd):/var/consumer-edge-install:ro" -it "gcr.io/${PROJECT_ID}/consumer-edge-install:latest"
+RETURN=$?
+
+if [[ $RETURN -gt 0 ]]; then
+    pretty_print "ERROR: Docker container cannot open."
+    exit 1
+fi
+
+
