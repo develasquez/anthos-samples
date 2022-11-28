@@ -231,8 +231,13 @@ pretty_print "(you are now inside the Docker shell)"
 pretty_print " "
 
 # Running docker image
-docker run -e PROJECT_ID="${PROJECT_ID}" -v "$(pwd):/var/consumer-edge-install:ro" -it "gcr.io/${PROJECT_ID}/consumer-edge-install:latest"
+docker run -e PROJECT_ID="${PROJECT_ID}" -v "$(pwd):/var/consumer-edge-install:rw" -id "gcr.io/${PROJECT_ID}/consumer-edge-install:latest" 
+docker ps
+
 RETURN=$?
+
+
+
 
 if [[ $RETURN -gt 0 ]]; then
     pretty_print "ERROR: Docker container cannot open."

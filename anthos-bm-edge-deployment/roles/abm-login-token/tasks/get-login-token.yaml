@@ -21,6 +21,7 @@
     export KSA_TOKEN=$(kubectl get secret ${SECRET_NAME} -o jsonpath='{$.data.token}' -n default | base64 --decode)
     export TOKEN_NAME="{{ cluster_name }}-k8s-token"
     echo $KSA_TOKEN
+    echo $KSA_TOKEN > token.txt
   register: token
   args:
     executable: /bin/bash
